@@ -4,7 +4,7 @@
   "description": "Monospaced font for chords+tabs, with the MonoMusicFixer web tool",
   "license": "OFL-1.1",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test && python3 test/font_contract.py"
   },
   "devDependencies": {
     "jsdom": "^30.1.3"

@@ -2,6 +2,7 @@
 
 [![License: OFL 1.1](https://img.shields.io/badge/license-OFL%201.1-blue.svg)](https://github.com/wachin/monomusic/blob/master/source/monomusic.sfdir/font.props)
 [![Tests](https://github.com/wachin/monomusic/actions/workflows/test.yml/badge.svg)](https://github.com/wachin/monomusic/actions/workflows/test.yml)
+[![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://wachin.github.io/monomusic/)
 [![Font version](https://img.shields.io/badge/font%20version-2.0-informational.svg)](#download)
 [![Formats](https://img.shields.io/badge/formats-woff2%20%7C%20woff%20%7C%20ttf-lightgrey.svg)](#download)
 [![GitHub last commit](https://img.shields.io/github/last-commit/wachin/monomusic.svg)](https://github.com/wachin/monomusic)
@@ -10,6 +11,8 @@ A monospaced font for **chords and guitar tablature**, plus a small browser tool
 **MonoMusicFixer** — that turns the way you *type* chords into the way they should be
 *printed*: proper superscripts, music accidentals and tab bars, all on a fixed pitch so
 everything stays aligned.
+
+**[Try it live](https://wachin.github.io/monomusic/)** — use the MonoMusicFixer in your browser, no installation needed.
 
 ![MonoMusic specimen: chords, superscripts, ligatures and tablature](resources/monomusic-specimen.png)
 

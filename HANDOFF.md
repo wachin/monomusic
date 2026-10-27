@@ -15,9 +15,17 @@
   (`github.com:wachin/monomusic`), no al repo original. Verificado con
   `git remote -v`. El desarrollo continúa aquí.
 - ✅ Commit `1d23e41` (2026-10-27): `fixer: syntax fix, restore a!/|
-  conversions, correct superscript codes` — incluye `js/chordhighlight.js`,
-  `styles.css` y `HANDOFF.md`. **Sin push.** El commit `174a2ef` que mencionaba
-  este archivo en versiones anteriores no existe en este clon.
+  conversions, correct superscript codes` — `js/chordhighlight.js`, `styles.css`
+  y `HANDOFF.md`.
+- ✅ Commit `4f4926e` (2026-10-27): `add fixer tests, node:test + jsdom` —
+  `test/fixer.test.js`, `package.json`, `package-lock.json`, `.gitignore`,
+  `HANDOFF.md`. **Ninguno de los dos está push-eados.** El commit `174a2ef`
+  que mencionaba este archivo en versiones anteriores no existe en este clon.
+- ✅ Commit `09a2b53` (2026-10-27): `re-export font from sfdir, restore l!
+  bar ligature` — `MonoMusic-Regular.{ttf,woff,woff2}` (re-export, ver §3e),
+  `source/monomusic.sfdir/bar.glyph` y `HANDOFF.md`. **Working tree limpio.**
+  Ningún commit de los tres está push-eados. El commit `174a2ef` que
+  mencionaba este archivo en versiones anteriores no existe en este clon.
 
 ## 2. Cómo continuar
 
@@ -95,6 +103,75 @@ línea `+`/`-`→PUA para `-`); es un cambio de un reemplazo.
 - Prefijos redundantes `-moz-`/`-ms-`/`-webkit-` de `font-feature-settings`
   eliminados de `.super`.
 
+### e) Fuente: auditoría del manual + re-export desde `.sfdir` (2026-10-27)
+
+**Auditoría `resources/MonoManual.pdf` ↔ `cmap`** (PyMuPDF + fontTools): el
+manual compone 329 caracteres distintos en `MonoMusic-Regular`; 328 los cubre
+la fuente. El único "faltante" es `U+2011` (NON-BREAKING HYPHEN) y **no es un
+hueco de diseño**: en el PDF se dibuja con el glifo del guion normal (mismo
+GID que `-`), y `U+2011` no está ni en la fuente ni en los binarios. Solo
+afecta si alguien pega un guion no separable desde un procesador de textos.
+
+**Deriva detectada entre `source/monomusic.sfdir/` y los binarios embarcados:**
+
+- La fuente tenía `eleven.sup` (`U+E040`) y `thirteen.sup` (`U+E041`)
+  **sin exportar** → `C11`/`C13` no ligaban en la web.
+- Los binarios tenían `U+000D` y `U+25FC`, **ausentes de la fuente**.
+- El binario tenía la ligadura **`l exclam → bar` que NO estaba en la fuente**
+  (`bar.glyph` no tenía línea `Ligature2`): re-exportar a ciegas habría borrado
+  las barras de tablatura que el fixer genera con `|→l!`. Detectado por la
+  verificación del diff, antes de tocar los binarios.
+
+**Acciones realizadas:**
+1. `source/monomusic.sfdir/bar.glyph`: añadida
+   `Ligature2: "'liga' Standard Ligatures lookup 1-1" l exclam`
+   (mismo patrón que `flat.glyph`, `_Delta.glyph`, `oslash.glyph`: la línea va
+   justo antes de `EndChar`).
+2. Re-export con FontForge 20230101 → `MonoMusic-Regular.ttf`.
+3. `WOFF` y `WOFF2` generados **desde ese TTF** con fontTools
+   (`f.flavor = "woff" / "woff2"`), porque la exportación WOFF de FontForge
+   omitía `.null` y `nonmarkingreturn` (444 glifos en vez de 446).
+
+**Diff verificado (embarcado → nuevo)** — los tres formatos son idénticos entre
+sí (446 glifos, mismo `cmap`, mismo orden de glifos):
+
+| | antes | después |
+|---|---|---|
+| `cmap` | 443 | 443: `+U+E040 eleven.sup`, `+U+E041 thirteen.sup`, `−U+000D`, `−U+25FC` |
+| ligaduras GSUB | 62 | **64**: `+ one.sup one.sup→eleven.sup`, `+ one.sup three.sup→thirteen.sup`, `l exclam→bar` conservada |
+| `OS/2.fsType` | 4 | 0 — el `font.props` declara `FSType: 0`, así que el nuevo respeta la fuente |
+| `name` id 4 | `MonoMusic regular` | `MonoMusic Regular` |
+| tablas | incluía `webf` (basura) | sin `webf` |
+
+**Verificación tras el cambio:** `npm test` 13/13 ✅ y prueba visual en el
+navegador con la fuente nueva servida por HTTP (sha256 del `woff2` comprobado
+contra el disco): barras de tablatura ✅, `C⁺ C⁻ CΔ7 Cø Gsus4 B♭7` ✅ y
+`C¹¹`/`C¹³` ahora ligados en el glifo diseñado ✅.
+
+**Cómo re-exportar** (no requiere root: FontForge se descarga y extrae en
+local; en este entorno `sudo` pedía contraseña):
+
+```bash
+# 1. dependencias: solo las que falten, extraídas en local
+mkdir -p .fontforge-local/debs && cd .fontforge-local
+LC_ALL=C apt-cache depends --recurse --no-recommends --no-suggests \
+  fontforge python3-fontforge | grep -E '^\s+(Depends|PreDepends):' \
+  | awk '{print $2}' | sed 's/[<>]//g' | sort -u > all_deps.txt
+# filtrar las ya instaladas y descargar (apt-get download no necesita root)
+cd debs && apt-get download fontforge fontforge-common libfontforge4 \
+  libspiro1 libwoff1 libtextwrap1
+cd .. && mkdir -p root && for d in debs/*.deb; do dpkg-deb -x "$d" root/; done
+
+# 2. exportar (lang=ff evita necesitar python3-fontforge)
+export LD_LIBRARY_PATH=$PWD/root/usr/lib/x86_64-linux-gnu
+export FONTFORGE_SHARE=$PWD/root/usr/share/fontforge
+root/usr/bin/fontforge -lang=ff -c 'Open($1); Generate($2); Close();' \
+  ../source/monomusic.sfdir "$PWD/MonoMusic-Regular.ttf"
+
+# 3. woff/woff2 desde el ttf (fontTools) + diff de cmap/GSUB con fontTools
+# 4. borrar .fontforge-local cuando termines (~25 MB)
+```
+
 ## 4. Estado de verificación (hecho ✅)
 
 - **Tests automatizados añadidos** (2026-10-27): `npm test` → `node --test` →
@@ -143,18 +220,22 @@ python3 -m http.server 8123      # y/o la prueba visual manual:
 ## 5. Tareas pendientes (prioridad sugerida)
 
 1. ~~Prueba visual E2E del fixer~~ **HECHA** (ver §4).
-2. **Glifos faltantes** en `source/monomusic.sfdir/` — requiere editar curvas
-   cúbicas FontForge (.sfdir, formato `SplineFontDB: 3.0`). Los glifos de
-   música clave (flat, sharp, sups numéricos) ya existen; revisar el manual
-   `resources/MonoManual.pdf` para detectar huecos reales antes de diseñar.
+2. ~~Glifos faltantes en `source/monomusic.sfdir/`~~ **AUDITORÍA HECHA** (§3e):
+   el manual no descubre ningún hueco real de diseño; solo queda **opcional**
+   mapear `U+2011` (guion no separable) al glifo `hyphen` existente en
+   FontForge, sin dibujar nada nuevo.
 3. **Prefijos CSS restantes** en `body, textarea` (`styles.css` líneas ~23-25)
    — redundantes hoy, se dejaron por escopo mínimo.
 4. **Dependencias vintage**: jQuery + Foundation 5.x (`js/vendor/`, `js/foundation/`).
    Modernizar solo si hay un objetivo concreto; no refactorizar por refactorear.
 5. Actualizar `README.md` (enlaces raw a GitHub del repo original, imagen rota potencial).
-6. **Commitear la suite de tests** nueva, todavía sin trackear:
-   `.gitignore`, `package.json`, `package-lock.json`, `test/fixer.test.js`.
-   (El fixer y el HANDOFF ya están en el commit `1d23e41`.)
+6. ~~Commitear el re-export de la fuente~~ **HECHO** (`09a2b53`): binarios,
+   `bar.glyph` y este `HANDOFF.md`. (Fixer: `1d23e41`; tests: `4f4926e`.)
+   **Falta hacer `git push` a `origin` (fork `wachin/monomusic`).**
+7. **Test de contrato fuente↔fixer**: que todo código que emite
+   `chordhighlight.js` y todo carácter que usa el manual exista en el `cmap`
+   con el nombre de glifo esperado (`E01A=plus.sup`, `E019=minus.sup`, …) —
+   evita repetir el bug `+→nine.sup` y detecta deriva binario↔fuente en CI.
 
 ## 6. Convenciones del proyecto
 

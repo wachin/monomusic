@@ -1,7 +1,7 @@
 # MonoMusic
 
 [![License: OFL 1.1](https://img.shields.io/badge/license-OFL%201.1-blue.svg)](https://github.com/wachin/monomusic/blob/master/source/monomusic.sfdir/font.props)
-[![Tests](https://img.shields.io/badge/tests-13%20passing%20%2B%20font%20contract-brightgreen.svg)](#testing)
+[![Tests](https://github.com/wachin/monomusic/actions/workflows/test.yml/badge.svg)](https://github.com/wachin/monomusic/actions/workflows/test.yml)
 [![Font version](https://img.shields.io/badge/font%20version-2.0-informational.svg)](#download)
 [![Formats](https://img.shields.io/badge/formats-woff2%20%7C%20woff%20%7C%20ttf-lightgrey.svg)](#download)
 [![GitHub last commit](https://img.shields.io/github/last-commit/wachin/monomusic.svg)](https://github.com/wachin/monomusic)

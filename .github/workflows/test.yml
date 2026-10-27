@@ -1,0 +1,35 @@
+name: tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # font contract test: fontTools is required, pymupdf enables the
+      # MonoManual.pdf coverage section (both are skipped gracefully without)
+      - name: Install font tooling
+        run: python -m pip install --quiet fonttools pymupdf
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      # node --test (13 fixer tests) + python3 test/font_contract.py
+      - name: Run fixer tests and font contract
+        run: npm test

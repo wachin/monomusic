@@ -4,9 +4,63 @@
   "description": "Monospaced font for chords+tabs, with the MonoMusicFixer web tool",
   "license": "OFL-1.1",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "node --test && python3 test/font_contract.py"
   },
   "devDependencies": {
-    "jsdom": "^30.1.3"
-  }
+    "@types/node": "^26.6.5",
+    "@vitejs/plugin-legacy": "^8.2.3",
+    "autoprefixer": "^10.6.2",
+    "jsdom": "^30.1.3",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "bidi-js": "^1.1.0",
+    "css-tree": "^3.2.1",
+    "data-urls": "^8.0.0",
+    "decimal.js": "^10.6.0",
+    "entities": "^8.1.0",
+    "html-encoding-sniffer": "^7.0.0",
+    "i18next": "^26.5.11",
+    "i18next-browser-languagedetector": "^8.2.3",
+    "is-potential-custom-element-name": "^1.0.1",
+    "lru-cache": "^11.5.3",
+    "mdn-data": "^2.27.1",
+    "parse5": "^8.0.1",
+    "punycode": "^2.3.1",
+    "require-from-string": "^2.0.2",
+    "saxes": "^6.0.0",
+    "source-map-js": "^1.2.2",
+    "tldts": "^7.4.19",
+    "tldts-core": "^7.4.19",
+    "tough-cookie": "^6.0.2",
+    "tr46": "^7.0.0",
+    "undici": "^8.12.3",
+    "w3c-xmlserializer": "^6.0.0",
+    "webidl-conversions": "^8.0.1",
+    "whatwg-mimetype": "^5.0.0",
+    "whatwg-url": "^17.3.0",
+    "xml-name-validator": "^5.0.0",
+    "xmlchars": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wachin/monomusic.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/wachin/monomusic/issues"
+  },
+  "homepage": "https://github.com/wachin/monomusic#readme"
 }

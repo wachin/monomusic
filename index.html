@@ -1,196 +1,124 @@
-<!doctype html>
-<html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" >
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-    <title>MonoMusic</title>
-    <link rel="stylesheet" href="foundation.min.css" >
-    <link rel="stylesheet" href="styles.css" >
-    <script src="js/vendor/jquery.js"></script>
-    <script src="js/prefix.js"></script>
-    <script src="js/highlight.js"></script>
-    <script src="js/chordhighlight.js"></script>
-    <script src="js/color.js"></script>
-  </head>
-  <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonoMusic - Chord & Tab Converter</title>
+    <meta name="description" content="MonoMusic - A monospaced font for chords and tabs with online converter">
+</head>
+<body>
+    <button id="close-focus" aria-label="Close focus mode">×</button>
+    
+    <div class="container mx-auto max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-bold text-gray-800 mb-2" data-i18n="title">MonoMusic</h1>
+            <p class="text-xl text-gray-600 mb-6" data-i18n="tagline">A monospaced font for chords+tabs</p>
+            <div class="flex flex-wrap gap-3 justify-center mb-6">
+                <a href="https://github.com/wachin/monomusic" class="btn" data-i18n="download">Download</a>
+                <a href="resources/MonoManual.pdf" class="btn" data-i18n="pdfManual">PDF Manual</a>
+            </div>
+            <div class="flex justify-center items-center gap-4">
+                <select id="lang-select" class="px-3 py-2 rounded-lg border border-gray-300 bg-white">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                </select>
+            </div>
+        </header>
 
-    <div class="row">
-      <div class="large-12 columns">
-        <h1>MonoMusic</h1>
-        <h2 class="tagline">A monospaced font for chords+tabs</h2>
-        <a class="button" href="https://github.com/wachin/monomusic">download</a> <a class="button" href="resources/MonoManual.pdf">pdf manual</a>
-        <h2 class="chordfixer">MonoMusicFixer</h2>
-      </div>
+        <!-- Converter Section -->
+        <section class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center" data-i18n="chordFixer">MonoMusicFixer</h2>
+            
+            <form id="converter-form" class="mb-4">
+                <textarea 
+                    id="text-input" 
+                    class="w-full h-48 p-4 border-2 border-gray-300 rounded-lg resize-y focus:outline-none focus:border-blue-500"
+                    data-i18n-placeholder="placeholder"
+                    placeholder="Type/paste here, click 'Fix' and get chords like shown in the example"
+                ></textarea>
+                <button type="submit" id="fix-btn" class="btn mt-3" data-i18n="fix">Fix</button>
+            </form>
 
+            <!-- Document Title -->
+            <div id="document-title" class="mb-4 hidden">
+                <input 
+                    type="text" 
+                    class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    placeholder="Document Title"
+                >
+            </div>
 
-      <div class="large-12 columns">
-        <form onsubmit="convert();return false;">
-          <textarea id="text" placeholder="Type/paste here, 'Fix' and get chords like shown in the example document below"></textarea>
-          <input type="submit" name="submit" value="Fix" class="button">
-        </form>
-        <div class="title" placeholder="Examples - by @andreaslarsendk" contenteditable="true"></div>
-        <div class="text" id="hyp" contenteditable="true">Chords+text: Wonderwall (Capo II)
+            <!-- Output -->
+            <div id="output-container" class="mb-4">
+                <div id="output" class="text">Chords+text: Wonderwall (Capo II)
 
-<span class="highlight">Em</span>      <span class="highlight">G</span>
+Em7      G
 Today is gonna be the day
-             <span class="highlight">D</span><span class="highlight"></span>                   <span class="highlight">A</span><span class="highlight"></span>
+             D7/A                   A7/E
 That they're gonna throw it back to you
-<span class="highlight">Em</span>        <span class="highlight">G</span>
+Em7        G
 By now you should of somehow
-   <span class="highlight">D</span><span class="highlight"></span>                 <span class="highlight">A</span><span class="highlight"></span>
+   D7/A                 A7/E
 Realised what you gotta do
-<span class="highlight">Em</span>                  <span class="highlight">G</span>       <span class="highlight">D</span><span class="highlight"></span>            <span class="highlight">A</span><span class="highlight"></span>
+Em7                  G       D7/A            A7/E
 I don't believe that anybody feels the way I do
-          <span class="highlight">C</span><span class="highlight"></span>  <span class="highlight">D</span>  <span class="highlight">A</span><span class="highlight"></span>
-About you now
+          Cmaj7/G  D7/A  A7/E
+About you now</div>
+            </div>
 
+            <!-- Controls -->
+            <div class="flex flex-wrap gap-2 justify-center mb-4">
+                <button id="title-btn" class="btn-secondary" data-i18n="titleBtn">Title</button>
+                <button id="adsu-btn" class="btn-secondary" data-i18n="adsu">Adsu</button>
+                <button id="btoh-btn" class="btn-secondary" data-i18n="bToH">B→H</button>
+                <button id="font-minus" class="btn-secondary">A-</button>
+                <button id="font-plus" class="btn-secondary">A+</button>
+                <button id="done-btn" class="btn" data-i18n="done">Done</button>
+            </div>
 
+            <!-- Color Controls -->
+            <div class="flex flex-wrap gap-4 justify-center mb-4 items-center">
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-700 font-medium" data-i18n="chords">Chords</label>
+                    <select id="chord-color" class="px-2 py-1 rounded border border-gray-300">
+                        <option value="hsl(195, 100%, 42%)">Cyan 1</option>
+                        <option value="hsl(195, 100%, 47%)" selected>Cyan 2</option>
+                        <option value="hsl(195, 100%, 57%)">Cyan 3</option>
+                        <option value="hsl(324, 100%, 45%)">Magenta 1</option>
+                        <option value="hsl(324, 100%, 48%)">Magenta 2</option>
+                        <option value="hsl(57, 100%, 44%)">Yellow</option>
+                        <option value="hsl(0, 0%, 0%)">Black</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-700 font-medium" data-i18n="text">Text</label>
+                    <select id="text-color" class="px-2 py-1 rounded border border-gray-300">
+                        <option value="hsl(195, 5%, 10%)">10%</option>
+                        <option value="hsl(195, 5%, 20%)" selected>20%</option>
+                        <option value="hsl(195, 5%, 40%)">40%</option>
+                        <option value="hsl(0, 0%, 0%)">100%</option>
+                    </select>
+                </div>
+            </div>
+        </section>
 
-Tab: Stairway to heaven intro
+        <!-- Help Section -->
+        <section class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="text-gray-700 space-y-2">
+                <p><strong data-i18n="help.title">Title - Show/hide the editable document title</strong></p>
+                <p><strong data-i18n="help.adsu">Adsu - Adds the maybe missing space(s) after add and sus chords</strong></p>
+                <p><strong data-i18n="help.btoh">B→H - If you're from Denmark</strong></p>
+                <p><strong data-i18n="help.size">+/- - Font size</strong></p>
+                <p><strong data-i18n="help.done">Done - Hide everything but the document</strong></p>
+                <p class="mt-4">
+                    <span data-i18n="reportIssues">Report issues and give me ideas on</span> 
+                    <a href="https://github.com/wachin/monomusic" class="text-blue-600 hover:underline">GitHub</a>
+                </p>
+            </div>
+        </section>
+    </div>
 
-E|-------5-7-----7-|-8-----8-2-----2-|-0---------0-----|-----------------|
-B|-----5-----5-----|---5-------3-----|---1---1-----1---|-0-1-1-----------|
-G|---5---------5---|-----5-------2---|-----2---------2-|-0-2-2-----------|
-D|-7-------6-------|-5-------4-------|-3---------------|-----------------|
-A|-----------------|-----------------|-----------------|-2-0-0---0--/8-7-|
-E|-----------------|-----------------|-----------------|-----------------|
-
-
-
-Chords+tab: Daughters
-
- <span class="highlight">E</span><span class="highlight">/B</span>  <span class="highlight">Em</span>  <span class="highlight">Em/A</span>   <span class="highlight">D</span>    <span class="highlight">E</span>    <span class="highlight">D</span>     <span class="highlight">Bm</span>   <span class="highlight">D/F</span>   <span class="highlight">D</span>   <span class="highlight">Gm/D</span>  <span class="highlight">A/D</span>  <span class="highlight">Gm</span>  <span class="highlight">A</span>
-e|---0-----0-----0-----2-----0-----2-----2-----x-----5-----3-----0-----1-----2--
-B|---3-----3-----3-----0-----3-----3-----3-----3-----5-----3-----2-----1-----2--
-G|---2-----0-----0-----2-----1-----2-----4-----2-----5-----3-----0-----3-----0--
-D|---x-----2-----2-----0-----2-----0-----4-----0-----0-----0-----0-----x-----2--
-A|---2-----2-----0-----x-----2-----x-----2-----x-----x-----x-----x-----0-----0--
-E|---x-----0-----x-----x-----0-----x-----x-----x-----x-----x-----x-----3-----x--</div>
-        <div>
-          <span id="title" class="button">Title</span>
-<!--          <span id="column" class="button">Col</span>-->
-          <span id="addfix" class="button">Adsu</span>
-          <span id="magich" class="button">B→H</span>
-          <span id="plus" class="button">+</span>
-          <span id="minus" class="button">÷</span>
-          <span id="farve">
-            Chords
-            <select name="colorpicker">
-              <option value="hsl(195, 100%, 42%)">cyan1</option>
-              <option value="hsl(195, 100%, 47%)" selected>cyan2</option>
-              <option value="hsl(195, 100%, 57%)">cyan3</option>
-              <option value="hsl(195, 100%, 67%)">cyan4</option>
-              <option value="hsl(324, 100%, 45%)">magento1</option>
-              <option value="hsl(324, 100%, 48%)">magento2</option>
-              <option value="hsl(324, 100%, 61%)">magento3</option>
-              <option value="hsl(324, 100%, 76%)">magento4</option>
-              <option value="hsl(57, 100%, 40%)">yellow1</option>
-              <option value="hsl(57, 100%, 44%)">yellow2</option>
-              <option value="hsl(57, 100%, 48%)">yellow3</option>
-              <option value="hsl(57, 100%, 50%)">yellow4</option>
-              <option value="hsl(195, 5%, 0%)">0%</option>
-              <option value="hsl(195, 5%, 10%)">10%</option>
-              <option value="hsl(195, 5%, 20%)">20%</option>
-              <option value="hsl(195, 5%, 30%)">30%</option>
-              <option value="hsl(195, 5%, 40%)">40%</option>
-              <option value="hsl(195, 5%, 50%)">50%</option>
-              <option value="hsl(195, 5%, 60%)">60%</option>
-              <option value="hsl(195, 5%, 70%)">70%</option>
-              <option value="hsl(195, 5%, 80%)">80%</option>
-              <option value="hsl(195, 5%, 90%)">90%</option>
-              <option value="hsl(195, 5%, 100%)">100%</option>
-            </select>
-            Text
-            <select name="textpicker">
-              <option value="hsl(195, 5%, 0%)">0%</option>
-              <option value="hsl(195, 5%, 10%)">10%</option>
-              <option value="hsl(195, 5%, 20%)" selected>20%</option>
-              <option value="hsl(195, 5%, 30%)">30%</option>
-              <option value="hsl(195, 5%, 40%)">40%</option>
-              <option value="hsl(195, 5%, 50%)">50%</option>
-              <option value="hsl(195, 5%, 60%)">60%</option>
-              <option value="hsl(195, 5%, 70%)">70%</option>
-              <option value="hsl(195, 5%, 80%)">80%</option>
-              <option value="hsl(195, 5%, 90%)">90%</option>
-              <option value="hsl(195, 5%, 100%)">100%</option>
-            </select>
-          </span>
-        </div><!--buttons-->
-        <div><span id="hide" class="button">Done</span></div>
-      </div>
-      <div class="large-12 columns white">Title - Show/hide the editable document title
-Adsu  - Adds the maybe missing space(s) after add and sus chords
-B→H   - If you're from Denmark
-+/-   - Font size
-Done  - Hide everything but the document
-
-Report issues and give me ideas on <a href="https://github.com/wachin/monomusic">GitHub</a></div>
-    </div><!-- Row -->
-    <div id="close">×</div>
-    <script>
-      $(document).ready(function(){
-        $("#plus").click(function() {
-            var fontSize = parseInt($('body').css("font-size"));
-            fontSize = fontSize + 1 + "px";
-            $('body, textarea').css({'font-size':fontSize});
-        });
-        $("#minus").click(function() {
-            var fontSize = parseInt($('body').css("font-size"));
-            fontSize = fontSize - 1 + "px";
-            $('body, textarea').css({'font-size':fontSize});
-        });
-        $('select[name="colorpicker"]').simplecolorpicker({
-          picker: true,
-        }).on('change', function() {
-          $(".highlight").css('color', $('select[name="colorpicker"]').val());
-        });
-        $('select[name="textpicker"]').simplecolorpicker({
-          picker: true,
-        }).on('change', function() {
-          $(".text, .title").css('color', $('select[name="textpicker"]').val());
-        });
-        $("#title").click(function(){
-          $("body").toggleClass("withtitle");
-        });
-//        $("#column").click(function(){
-//          $(".text").toggleClass("col2");
-//        });
-        $("#hide").click(function(){
-          $("body").addClass("wow");
-        });
-        $("#close").click(function(){
-          $("body").removeClass("wow");
-        });
-        $(document).on('keyup',function(evt) {
-          if (evt.keyCode == 27) {
-            evt.preventDefault();
-            $("body").removeClass("wow");
-          }
-        });
-        $("#magich").click(function(){
-          $(".highlight").each(function() {
-            var text = $(this).text();
-            text = text.replace(/B/g, "H");
-            $(this).text(text);
-          });
-        });
-        $("#addfix").click(function(){
-          $(".highlight").each(function() {
-            var text = $(this).text();
-            text = text.replace(/sus2/g, "sus2 ");
-            text = text.replace(/sus4/g, "sus4 ");
-            text = text.replace(/\uE021\uE022\uE021\uE002/g, "\uE021\uE022\uE021\uE002 ");  //sus2
-            text = text.replace(/\uE021\uE022\uE021\uE004/g, "\uE021\uE022\uE021\uE004 ");  //sus4
-            text = text.replace(/\uE01B\uE01C\uE01C\uE002/g, "\uE01B\uE01C\uE01C\uE002 ");  //add2
-            text = text.replace(/\uE01B\uE01C\uE01C\uE004/g, "\uE01B\uE01C\uE01C\uE004 ");  //add4
-            text = text.replace(/\uE01B\uE01C\uE01C\uE006/g, "\uE01B\uE01C\uE01C\uE006 ");  //add6
-            text = text.replace(/\uE01B\uE01C\uE01C\uE009/g, "\uE01B\uE01C\uE01C\uE009 ");  //add9
-            text = text.replace(/\uE01B\uE01C\uE01C\uE001\uE001/g, "\uE01B\uE01C\uE01C\uE001\uE001 ");  //add11
-            text = text.replace(/\uE01B\uE01C\uE01C\uE001\uE003/g, "\uE01B\uE01C\uE01C\uE001\uE003 ");  //add13
-            $(this).text(text);
-          });
-        });
-      });
-    </script>
-  </body>
+    <script type="module" src="/src/main.ts"></script>
+</body>
 </html>

@@ -1,0 +1,28 @@
+{
+  "title": "MonoMusic",
+  "tagline": "A monospaced font for chords+tabs",
+  "download": "Download",
+  "pdfManual": "PDF Manual",
+  "chordFixer": "MonoMusicFixer",
+  "placeholder": "Type/paste here, click 'Fix' and get chords like shown in the example",
+  "fix": "Fix",
+  "titleBtn": "Title",
+  "adsu": "Adsu",
+  "bToH": "B→H",
+  "done": "Done",
+  "chords": "Chords",
+  "text": "Text",
+  "help": {
+    "title": "Title - Show/hide the editable document title",
+    "adsu": "Adsu - Adds the maybe missing space(s) after add and sus chords",
+    "btoh": "B→H - If you're from Denmark",
+    "size": "+/- - Font size",
+    "done": "Done - Hide everything but the document"
+  },
+  "reportIssues": "Report issues and give me ideas on",
+  "language": "Language",
+  "fontSize": "Font Size",
+  "color": "Color",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode"
+}

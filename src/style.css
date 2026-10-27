@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'MonoMusic';
+  src: url('/MonoMusic-Regular.woff2') format('woff2'),
+       url('/MonoMusic-Regular.woff') format('woff'),
+       url('/MonoMusic-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --chord-color: hsl(195, 100%, 47%);
+  --text-color: hsl(195, 5%, 20%);
+}
+
+* {
+  font-family: 'MonoMusic', 'Courier New', monospace;
+}
+
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.chord-highlight {
+  color: var(--chord-color);
+}
+
+.text {
+  color: var(--text-color);
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#output {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  min-height: 200px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-family: 'MonoMusic', monospace;
+}
+
+textarea {
+  font-family: 'MonoMusic', monospace !important;
+}
+
+.focus-mode .container > *:not(#output-container):not(#close-focus) {
+  display: none !important;
+}
+
+.focus-mode #output-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow: auto;
+  z-index: 1000;
+}
+
+.focus-mode #output {
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.focus-mode::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+}
+
+#close-focus {
+  display: none;
+}
+
+.focus-mode #close-focus {
+  display: block;
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1001;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn {
+  @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200;
+}
+
+.hidden {
+  display: none;
+}

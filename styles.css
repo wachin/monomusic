@@ -5,6 +5,7 @@
          url('MonoMusic-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'm_1cheavy';
@@ -13,6 +14,7 @@
          url('mplus-1c-heavy.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 body, textarea {
@@ -111,9 +113,6 @@ textarea {
 }
 .super {
   font-variant-position: super;
-  -moz-font-feature-settings: "sups";
-  -ms-font-feature-settings: "sups";
-  -webkit-font-feature-settings: "sups";
   font-feature-settings: "sups";
 }
 .highlight {

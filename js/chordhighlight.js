@@ -21,13 +21,21 @@ function chordHighligt() {
     text = text.replace(/b\!/g, "b");
     text = text.replace(/\u0023\!/g, "\#");
     text = text.replace(/\u1D6AB/g, "\u0394"); // Only greek Delta
-    text = text.replace(/A\!/g, "Δ");
+    text = text.replace(/A\!/g, "Δ"); // A! is the font ligature for Δ, normalize it for highlight.js
+
+    // Step 2: musical symbols → ASCII so highlight.js can match them
+    text = text.replace(/\u266F/g, "\#"); // sharp sign (U+266F) → #
+    text = text.replace(/\u266D/g, "b"); // flat sign (U+266D, NOT U+266E = natural) → b
+    text = text.replace(/\u00B0/g, "o"); // degree sign → o
+
+    // Step 3: tabs — | → l!, the font ligates l! into the bar glyph
     text = text.replace(/\|/g, "l\!");
-    text = text.replace(/\♯/g, "\#");
-    text = text.replace(/\°/g, "o");
-    text = text.replace(/\♭/g, "b");
+
+    // Step 4: write the normalized text back, close the per-element loop
     $(this).text(text);
   });
+
+  // Step 5: chord detection, runs once over all .text elements
   $('.text').highlight(['\/C\#', '\/D\#', '\/E\#', '\/F\#', '\/G\#', '\/A\#', '\/B\#', '\/C♭', '\/D♭', '\/E♭', '\/F♭', '\/G♭', '\/A♭', '\/B♭', '\/C', '\/D', '\/E', '\/F', '\/G', '\/A', '\/B', 'mb6', 'maj7+5', '7\#5', '(no 3rd)', 'm7b5', 'dim7', 'mΔ', '-Δ7', 'm\/M7', 'mM7', 'm\/maj7', 'm\/ma7', 'mΔ', 'min7', 'mi7',  'phryg', 'b9sus', '7sus4', 'sus2', 'sus4', 'alt7', '7\#9', '7b9', '7\#4', '7\#11',  'M7b6', 'ma7b6', 'maj7b6', 'Δ\#11', 'Δ\#4', 'maj\#4', 'Δ7', 'Δ', 'maj7', 'maj9', 'maj13', 'add13', 'add11', 'add9', 'add6', 'add2'], {
     caseSensitive: true
   });
@@ -40,18 +48,35 @@ function chordHighligt() {
   });
   $(".highlight").each(function () {
     var text = $(this).text();
-// Shrink
+// Shrink (reordered to fix bugs):
+    // Handle m7♭5 BEFORE the ♭ conversion, so the pattern can match
+    text = text.replace(/m7b5/g, "ø   ");
+
+    // Accidentals back to their musical symbols (encoded to PUA below)
     text = text.replace(/\#/g, "♯");
     text = text.replace(/b/g, "♭");
+
+    // Worded chord suffixes → compact symbols
     text = text.replace(/maj7/g, "Δ7  ");
     text = text.replace(/M7/g, "Δ7");
     text = text.replace(/min7/g, "m7  ");
     text = text.replace(/min/g, "m  ");
-    text = text.replace(/-/g, "m");
     text = text.replace(/aug/g, "+  ");
     text = text.replace(/dim/g, "o  ");
-    text = text.replace(/m7♭5/g, "ø   ");
-// Hardcode superscript
+
+    // + and - get DISTINCT superscripts: plus.sup (U+E01A) vs minus.sup (U+E019).
+    // U+E009 is nine.sup and U+E00A is flat.sup, so never use those for them.
+    text = text.replace(/\u002B/g, "\uE01A"); // plus → superscript +
+    text = text.replace(/\u002D/g, "\uE019"); // minus → superscript -
+
+    // Encode accidentals to their superscript glyphs
+    text = text.replace(/\u266D/g, "\uE00A"); // flat
+    text = text.replace(/\u266E/g, "\uE00B"); // natural
+    text = text.replace(/\u266F/g, "\uE00C"); // sharp
+    text = text.replace(/\u1D12A/g, "\uE00D"); //doublesharp
+    text = text.replace(/\u1D12B/g, "\uE00E"); //doubleflat
+
+    // Hardcode superscript
     text = text.replace(/a/g, "\uE01B");
     text = text.replace(/d/g, "\uE01C");
     text = text.replace(/s/g, "\uE021");
@@ -69,13 +94,7 @@ function chordHighligt() {
     text = text.replace(/ø/g, "\uE017");
     text = text.replace(/M/g, "\uE015");
     text = text.replace(/\u0394/g, "\uE018"); //Delta
-    text = text.replace(/\u002B/g, "\uE009"); //plus
-    text = text.replace(/\u002D/g, "\uE009"); //minus
-    text = text.replace(/\u266D/g, "\uE00A"); //flat
-    text = text.replace(/\u266E/g, "\uE00B"); //normal
-    text = text.replace(/\u266F/g, "\uE00C"); //sharp
-    text = text.replace(/\u1D12A/g, "\uE00D"); //doublesharp
-    text = text.replace(/\u1D12B/g, "\uE00E"); //doubleflat
+
     $(this).text(text);
   });
 }

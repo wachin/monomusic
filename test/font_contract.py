@@ -173,6 +173,17 @@ for digit in range(1, 10):
     check(re.search(rf'/{digit}/g, "\\uE0{digit:02X}"', fixer) is not None,
           f"digit {digit} -> U+E0{digit:02X}")
 
+# ---------------------------------------------------------------- non-breaking
+section("U+2011 (guion no separable) mapeado al outline del guion")
+check(cmap.get(0x2011) == "uni2011", f"U+2011 -> uni2011 (font has {cmap.get(0x2011)})")
+if "uni2011" in ttf.getGlyphOrder() and "hyphen" in ttf.getGlyphOrder():
+    glyf = ttf["glyf"]
+    def outline(name):
+        g = glyf[name]; g.expand(glyf)
+        coords, ends, flags = g.getCoordinates(glyf)
+        return [tuple(p) for p in coords], list(ends), list(flags), g.numberOfContours
+    check(outline("uni2011") == outline("hyphen"), "U+2011 draws exactly the hyphen outline")
+
 # ------------------------------------------------------------------ manual
 section("MonoManual.pdf coverage (optional)")
 try:
@@ -189,11 +200,8 @@ else:
                     if span.get("font") == "MonoMusic-Regular":
                         used.update(span.get("text", ""))
     uncovered = sorted(c for c in used if not c.isspace() and ord(c) not in cmap)
-    # U+2011 (non-breaking hyphen) is known: the manual draws it with the plain
-    # hyphen glyph and the code point is absent from the source too.
-    unexpected = [c for c in uncovered if ord(c) != 0x2011]
-    check(not unexpected, f"every manual character is covered by the font "
-                          f"[uncovered: {[f'U+{ord(c):04X}' for c in unexpected]}]")
+    check(not uncovered, f"every manual character is covered by the font "
+                         f"[uncovered: {[f'U+{ord(c):04X}' for c in uncovered]}]")
 
 # ------------------------------------------------------------------ result
 print(f"\n{'FAILED' if FAILURES else 'PASSED'}: "

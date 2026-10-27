@@ -1,0 +1,19 @@
+StartChar: uni2011
+Encoding: 8209 8209 443
+Width: 500
+Flags: W
+HStem: 269 72<120 380>
+VStem: 120 260<269 341>
+LayerCount: 3
+Back
+Fore
+SplineSet
+120 269 m 5
+ 120 341 l 5
+ 380 341 l 5
+ 380 269 l 5
+ 120 269 l 5
+EndSplineSet
+Layer: 2
+Substitution2: "'sups' Superscript lookup 1-1" minus.sup
+EndChar

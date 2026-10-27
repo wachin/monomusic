@@ -22,10 +22,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      # font contract test: fontTools is required, pymupdf enables the
-      # MonoManual.pdf coverage section (both are skipped gracefully without)
+      # font contract test: fontTools is required, brotli lets it decode .woff2,
+      # pymupdf enables the MonoManual.pdf coverage section
       - name: Install font tooling
-        run: python -m pip install --quiet fonttools pymupdf
+        run: python -m pip install --quiet fonttools brotli pymupdf
 
       - name: Install JS dependencies
         run: npm ci

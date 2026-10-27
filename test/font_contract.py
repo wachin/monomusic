@@ -40,6 +40,13 @@ except ImportError:
     print("SKIPPED: fontTools no esta instalado -> pip install fonttools")
     sys.exit(0)
 
+try:
+    import brotli  # fontTools necesita brotli para decodificar .woff2
+except ImportError:
+    print("FAIL: sin 'brotli' fontTools no puede leer MonoMusic-Regular.woff2 "
+          "y el contrato no se podria comprobar -> pip install brotli")
+    sys.exit(1)
+
 # The PUA contract: every superscript code point the fixer/website can emit and
 # the glyph name it must resolve to in MonoMusic-Regular.
 PUA = {

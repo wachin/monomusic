@@ -14,16 +14,18 @@
 - ✅ El remoto `origin` ya apunta al **fork del usuario**
   (`github.com:wachin/monomusic`), no al repo original. Verificado con
   `git remote -v`. El desarrollo continúa aquí.
-- ⚠️ El commit `174a2ef` **no existe** en este clon. Los cambios descritos en la
-  §3 están como **modificaciones sin commitear** en el working tree
-  (`git status`: `js/chordhighlight.js`, `styles.css` modificados; `HANDOFF.md`
-  sin trackear). No se ha hecho commit ni push de nada.
+- ✅ Commit `1d23e41` (2026-10-27): `fixer: syntax fix, restore a!/|
+  conversions, correct superscript codes` — incluye `js/chordhighlight.js`,
+  `styles.css` y `HANDOFF.md`. **Sin push.** El commit `174a2ef` que mencionaba
+  este archivo en versiones anteriores no existe en este clon.
 
 ## 2. Cómo continuar
 
 ```bash
 git status              # ver el estado de los cambios locales
 git diff                # revisar el diff antes de commitear
+npm install             # una vez, para los tests (jsdom)
+npm test                # node --test → test/fixer.test.js
 ```
 
 El remoto ya es el fork; no hace falta `git remote set-url` ni `cherry-pick`.
@@ -95,8 +97,17 @@ línea `+`/`-`→PUA para `-`); es un cambio de un reemplazo.
 
 ## 4. Estado de verificación (hecho ✅)
 
-- **No hay tests automatizados** en el repo (0 archivos de test).
-- **E2E ejecutado el 2026-10-27** con Chrome headless sobre el `index.html`
+- **Tests automatizados añadidos** (2026-10-27): `npm test` → `node --test` →
+  `test/fixer.test.js` (13 tests, node:test + jsdom como devDependency).
+  Cargan el `index.html` real con el jquery/highlight/chordhighlight reales,
+  pegan texto en `#text`, llaman `convert()` y afirman los **codepoints** de
+  `#hyp` (hace falta, porque la salida usa glifos superíndice del PUA).
+  Cubren: `C+`/`C-` distintos, maj7, m7b5, `A!`, sus/add, ♭♯ desde ASCII y
+  unicode, dim/aug/°/min, `H`, tablatura `|→l!` con dígitos intactos, notas
+  simples resaltadas, prosa intacta y una pasada mixta completa.
+  Verificado con mutación: cambiar `+`→`E01A` por otro código hace fallar 3
+  tests, así que la suite detecta la regresión.
+- **E2E manual con navegador ejecutado el 2026-10-27** con Chrome headless sobre el `index.html`
   real (servido con `python3 -m http.server`), pegando la entrada
   `C+ C- Cmaj7 Cm7b5 A! Gsus4 Bb7` + `E|---5-7---` y llamando `convert()`.
 - Resultado (codepoints leídos del DOM, todos correctos):
@@ -121,9 +132,11 @@ línea `+`/`-`→PUA para `-`); es un cambio de un reemplazo.
 - Las ligaduras están activas: `font-feature-settings: "liga","clig"` en
   `body`/`textarea` (`styles.css`), heredado por `#hyp`.
 
-**Reproduce la prueba:**
+**Reproduce las pruebas:**
 ```bash
-python3 -m http.server 8123
+npm install && npm test          # suite automática (13 tests)
+
+python3 -m http.server 8123      # y/o la prueba visual manual:
 # abrir http://localhost:8123/index.html, pegar el texto del checklist, clic "Fix"
 ```
 
@@ -139,8 +152,9 @@ python3 -m http.server 8123
 4. **Dependencias vintage**: jQuery + Foundation 5.x (`js/vendor/`, `js/foundation/`).
    Modernizar solo si hay un objetivo concreto; no refactorizar por refactorear.
 5. Actualizar `README.md` (enlaces raw a GitHub del repo original, imagen rota potencial).
-6. **Decidir y commitear** el working tree actual (3 archivos: `HANDOFF.md`,
-   `js/chordhighlight.js`, `styles.css`).
+6. **Commitear la suite de tests** nueva, todavía sin trackear:
+   `.gitignore`, `package.json`, `package-lock.json`, `test/fixer.test.js`.
+   (El fixer y el HANDOFF ya están en el commit `1d23e41`.)
 
 ## 6. Convenciones del proyecto
 

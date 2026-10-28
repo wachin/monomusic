@@ -175,6 +175,15 @@ function init() {
     });
   }
   
+  // Font switcher
+  const fontSelect = document.getElementById('font-select') as HTMLSelectElement;
+  if (fontSelect) {
+    fontSelect.addEventListener('change', (e) => {
+      const font = (e.target as HTMLSelectElement).value;
+      document.documentElement.style.setProperty('--main-font', font === 'monomusicmono' ? 'monomusicmono' : 'monomusicregular');
+    });
+  }
+  
   // Font size controls
   const plusBtn = document.getElementById('font-plus');
   const minusBtn = document.getElementById('font-minus');

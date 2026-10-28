@@ -10,13 +10,24 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'monomusicmono';
+  src: url('./MonoMusic-Mono.woff2') format('woff2'),
+       url('./MonoMusic-Mono.woff') format('woff'),
+       url('./MonoMusic-Mono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --chord-color: hsl(195, 100%, 47%);
   --text-color: hsl(195, 5%, 20%);
+  --main-font: 'monomusicregular';
 }
 
 * {
-  font-family: 'monomusicregular', 'Courier New', monospace;
+  font-family: var(--main-font), 'Courier New', monospace;
   font-variant-ligatures: common-ligatures;
   font-feature-settings: "liga", "clig";
   -webkit-font-feature-settings: "liga", "clig";
@@ -41,25 +52,30 @@ body {
   line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-word;
-  font-family: 'monomusicregular', monospace;
+  font-family: var(--main-font), monospace;
 }
 
 #output {
   background: white;
-  border: 2px solid #e2e8f0;
+  border: 2px solid #cbd5e1;
   border-radius: 8px;
   padding: 1.5rem;
-  min-height: 200px;
+  min-height: 300px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  font-family: 'monomusicregular', monospace;
+  font-family: var(--main-font), monospace;
   font-variant-ligatures: common-ligatures;
   font-feature-settings: "liga", "clig";
+  overflow-x: auto;
 }
 
 textarea {
-  font-family: 'monomusicregular', monospace !important;
+  font-family: var(--main-font), monospace !important;
   font-variant-ligatures: common-ligatures;
   font-feature-settings: "liga", "clig";
+  font-size: 0.95rem;
+  line-height: 1.5;
+  background: white;
+  border: 2px solid #cbd5e1;
 }
 
 .focus-mode .container > *:not(#output-container):not(#close-focus) {

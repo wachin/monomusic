@@ -1,14 +1,11 @@
 'use strict';
-// E2E-ish tests for the MonoMusicFixer pipeline (js/chordhighlight.js).
-// They load the real index.html + real jquery/highlight/chordhighlight scripts
-// in jsdom, paste text into #text, call convert() and assert on the codepoints
-// written into #hyp, because the output uses private-use superscript glyphs.
-const { test, before, after } = require('node:test');
+// Tests for the MonoMusicFixer pipeline (src/fixer.mjs), the module shared
+// by the web app and these tests. They feed text into convert() and assert on
+// the codepoints of the rendered output, because the result uses private-use
+// superscript glyphs.
+const { test, before } = require('node:test');
 const assert = require('node:assert/strict');
-const path = require('node:path');
-const { JSDOM, VirtualConsole } = require('jsdom');
-
-const INDEX = path.join(__dirname, '..', 'index.html');
+const { JSDOM } = require('jsdom');
 
 // PUA superscripts, verified against the cmap of MonoMusic-Regular.ttf
 const SUP = {
@@ -20,47 +17,30 @@ const SUP = {
   s: '\uE021', u: '\uE022',
 };
 
-let dom;
-let win;
+let convert;
 
 before(async () => {
-  const virtualConsole = new VirtualConsole();
-  // jsdom cannot parse the legacy foundation CSS; that must not fail the run
-  const scriptErrors = [];
-  virtualConsole.on('jsdomError', (err) => {
-    if (!/Could not parse CSS/.test(String(err.message || err))) scriptErrors.push(err);
-  });
-
-  dom = await JSDOM.fromFile(INDEX, {
-    runScripts: 'dangerously',
-    resources: 'usable',
-    pretendToBeVisual: true,
-    virtualConsole,
-  });
-
-  await new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('index.html load timed out')), 15000);
-    dom.window.addEventListener('load', () => { clearTimeout(timer); resolve(); });
-  });
-
-  win = dom.window;
-  assert.deepEqual(scriptErrors.map(String), [], 'no script errors while loading index.html');
-  assert.equal(typeof win.convert, 'function',
-    'convert() must exist — chordhighlight.js parses and loaded');
+  ({ convert } = await import('../src/fixer.mjs'));
+  assert.equal(typeof convert, 'function', 'fixer module exposes convert()');
 });
 
-after(() => { if (dom) dom.window.close(); });
-
-// Paste `input` into the fixer, press Fix, return the rendered text.
+// Render `input` through the fixer and return the text the user would see.
 function fix(input) {
-  win.document.getElementById('text').value = input;
-  win.convert();
-  return win.document.getElementById('hyp').textContent;
+  const html = convert(input);
+  const dom = new JSDOM(`<div id="hyp">${html}</div>`);
+  return dom.window.document.getElementById('hyp').textContent;
 }
 
 // The shrink step pads some replacements with spaces; they are cosmetic.
 function trimmed(input) {
   return fix(input).trim();
+}
+
+// Render and keep the document, for tests that inspect the markup.
+function fixDom(input) {
+  const html = convert(input);
+  const dom = new JSDOM(`<div id="hyp">${html}</div>`);
+  return dom.window.document.getElementById('hyp');
 }
 
 test('chord with augmented fifth uses plus.sup, not nine.sup', () => {
@@ -120,9 +100,8 @@ test('tablature keeps its bar and digits: | becomes l! (font ligature for bar)',
 });
 
 test('bare note letters get highlighted so they enter the shrink step', () => {
-  win.document.getElementById('text').value = 'C D E';
-  win.convert();
-  const spans = win.document.getElementById('hyp').querySelectorAll('.highlight');
+  const hyp = fixDom('C D E');
+  const spans = hyp.querySelectorAll('.highlight');
   assert.equal(spans.length, 3, 'each bare root note is wrapped in .highlight');
 });
 

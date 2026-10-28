@@ -154,7 +154,7 @@ for cp, expected in sorted(PUA.items()):
 
 # ------------------------------------------------------------------- fixer
 section("fixer emits only code points the font actually has")
-emitted = emitted_code_points("js/chordhighlight.js", "index.html", "test/fixer.test.js")
+emitted = emitted_code_points("js/chordhighlight.js", "src/fixer.mjs", "index.html", "test/fixer.test.js")
 missing = sorted(cp for cp in emitted if cp not in cmap)
 check(not missing, f"all {len(emitted)} \\uE0xx literals exist in the font "
                    f"[missing: {[hex(c) for c in missing]}]")

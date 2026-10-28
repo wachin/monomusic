@@ -10,8 +10,10 @@
 // PUA code points.
 
 export function nl2br(str) {
-  // $2 already carries the newline; do not add another one.
-  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
+  // The output uses white-space: pre-wrap, so keep actual newlines. The old
+  // page briefly inserted <br> and then jQuery .text() removed that markup;
+  // emitting both <br> and the original newline here doubles every line break.
+  return str + '';
 }
 
 // Step 1: normalize the raw input the way the original fixer did.

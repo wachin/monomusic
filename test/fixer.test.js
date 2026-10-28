@@ -18,9 +18,10 @@ const SUP = {
 };
 
 let convert;
+let nl2br;
 
 before(async () => {
-  ({ convert } = await import('../src/fixer.mjs'));
+  ({ convert, nl2br } = await import('../src/fixer.mjs'));
   assert.equal(typeof convert, 'function', 'fixer module exposes convert()');
 });
 
@@ -103,6 +104,15 @@ test('bare note letters get highlighted so they enter the shrink step', () => {
   const hyp = fixDom('C D E');
   const spans = hyp.querySelectorAll('.highlight');
   assert.equal(spans.length, 3, 'each bare root note is wrapped in .highlight');
+});
+
+test('line breaks are preserved once, not doubled by markup plus pre-wrap', () => {
+  const input = 'first line\nsecond line\nthird line';
+  const html = convert(input);
+  const output = fix(input);
+  assert.equal(nl2br(input), input);
+  assert.equal((output.match(/\n/g) || []).length, 2);
+  assert.equal((html.match(/<br\s*\/?\s*>/g) || []).length, 0);
 });
 
 test('prose around the chords is left untouched', () => {

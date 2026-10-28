@@ -5,60 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonoMusic - Chord & Tab Converter</title>
     <meta name="description" content="MonoMusic - A monospaced font for chords and tabs with online converter">
-  <script type="module" crossorigin src="/monomusic/assets/index.DfmGYuM4.js"></script>
-  <link rel="stylesheet" crossorigin href="/monomusic/assets/index.Dva8lF47.css">
+  <script type="module" crossorigin src="/monomusic/assets/index.CtSMDSJz.js"></script>
+  <link rel="stylesheet" crossorigin href="/monomusic/assets/index.BwqMaXaq.css">
   <script type="module">import'data:text/javascript,if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';import.meta.url;import("_").catch(()=>1);(async function*(){})().next();window.__vite_is_modern_browser=true</script>
   <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
 </head>
 <body>
     <button id="close-focus" aria-label="Close focus mode">×</button>
-    
-    <div class="container mx-auto max-w-6xl">
+
+    <div class="container">
         <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-5xl font-bold text-gray-800 mb-2" data-i18n="title">MonoMusic</h1>
-            <p class="text-xl text-gray-600 mb-6" data-i18n="tagline">A monospaced font for chords+tabs</p>
-            <div class="flex flex-wrap gap-3 justify-center mb-6">
+        <header class="site-header">
+            <h1 data-i18n="title">MonoMusic</h1>
+            <p class="tagline" data-i18n="tagline">A monospaced font for chords+tabs</p>
+            <div class="header-actions">
                 <a href="https://github.com/wachin/monomusic" class="btn" data-i18n="download">Download</a>
                 <a href="resources/MonoManual.pdf" class="btn" data-i18n="pdfManual">PDF Manual</a>
             </div>
-            <div class="flex justify-center items-center gap-4 flex-wrap">
-                <select id="lang-select" class="px-3 py-2 rounded-lg border border-gray-300 bg-white">
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                </select>
-                <select id="font-select" class="px-3 py-2 rounded-lg border border-gray-300 bg-white">
-                    <option value="monomusicregular">MonoMusic Regular</option>
-                    <option value="monomusicmono">MonoMusic Mono</option>
-                </select>
+            <div class="settings">
+                <label class="setting">
+                    <span data-i18n="language">Language</span>
+                    <select id="lang-select">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                    </select>
+                </label>
+                <label class="setting">
+                    <span data-i18n="font">Font</span>
+                    <select id="font-select">
+                        <option value="monomusicregular">MonoMusic Regular</option>
+                        <option value="monomusicmono">MonoMusic Mono</option>
+                    </select>
+                </label>
             </div>
         </header>
 
-        <!-- Converter Section -->
-        <section class="mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center" data-i18n="chordFixer">MonoMusicFixer</h2>
-            
-            <form id="converter-form" class="mb-4">
-                <textarea 
-                    id="text-input" 
+        <!-- Step 1: input -->
+        <section class="card" id="step-input">
+            <div class="card-head">
+                <span class="step">1</span>
+                <h2 data-i18n="step1">Paste your chords &amp; lyrics</h2>
+            </div>
+            <form id="converter-form">
+                <textarea
+                    id="text-input"
                     data-i18n-placeholder="placeholder"
                     placeholder="Type/paste here, click 'Fix' and get chords like shown in the example"
                 ></textarea>
-                <input type="submit" id="fix-btn" value="Fix" class="btn" data-i18n-value="fix">
+                <div class="form-actions">
+                    <button type="submit" id="fix-btn" class="btn btn-primary" data-i18n-value="fix">Fix</button>
+                    <button type="button" id="clear-btn" class="btn" data-i18n="clear">Clear</button>
+                </div>
             </form>
+        </section>
 
-            <!-- Document Title -->
-            <div id="document-title" class="mb-4 hidden">
-                <input 
-                    type="text" 
-                    class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="Document Title"
-                >
+        <!-- Step 2: output -->
+        <section class="card" id="output-container">
+            <div class="card-head">
+                <span class="step">2</span>
+                <h2 data-i18n="step2">Result</h2>
+                <div class="toolbar">
+                    <button id="copy-btn" class="tool-btn tool-primary" data-i18n="copy">Copy</button>
+                    <span class="sep"></span>
+                    <button id="title-btn" class="tool-btn" data-i18n="titleBtn">Title</button>
+                    <button id="adsu-btn" class="tool-btn" data-i18n="adsu">Adsu</button>
+                    <button id="btoh-btn" class="tool-btn" data-i18n="bToH">B→H</button>
+                    <button id="font-minus" class="tool-btn" aria-label="Smaller text">A−</button>
+                    <button id="font-plus" class="tool-btn" aria-label="Bigger text">A+</button>
+                    <button id="done-btn" class="tool-btn" data-i18n="done">Done</button>
+                </div>
             </div>
-
-            <!-- Output -->
-            <div id="output-container" class="mb-4">
-                <div id="output" class="text">Chords+text: Wonderwall (Capo II)
+            <div id="document-title" class="doc-title hidden">
+                <input type="text" placeholder="Document title">
+            </div>
+            <div id="output" class="text">Chords+text: Wonderwall (Capo II)
 
 Em7      G
 Today is gonna be the day
@@ -72,23 +92,10 @@ Em7                  G       D7/A            A7/E
 I don't believe that anybody feels the way I do
           Cmaj7/G  D7/A  A7/E
 About you now</div>
-            </div>
-
-            <!-- Controls -->
-            <div class="flex flex-wrap gap-2 justify-center mb-4">
-                <button id="title-btn" class="btn-secondary" data-i18n="titleBtn">Title</button>
-                <button id="adsu-btn" class="btn-secondary" data-i18n="adsu">Adsu</button>
-                <button id="btoh-btn" class="btn-secondary" data-i18n="bToH">B→H</button>
-                <button id="font-minus" class="btn-secondary">A-</button>
-                <button id="font-plus" class="btn-secondary">A+</button>
-                <button id="done-btn" class="btn" data-i18n="done">Done</button>
-            </div>
-
-            <!-- Color Controls -->
-            <div class="flex flex-wrap gap-4 justify-center mb-4 items-center">
-                <div class="flex items-center gap-2">
-                    <label class="text-gray-700 font-medium" data-i18n="chords">Chords</label>
-                    <select id="chord-color" class="px-2 py-1 rounded border border-gray-300">
+            <div class="card-foot">
+                <label class="setting">
+                    <span data-i18n="chords">Chords</span>
+                    <select id="chord-color">
                         <option value="hsl(195, 100%, 42%)">Cyan 1</option>
                         <option value="hsl(195, 100%, 47%)" selected>Cyan 2</option>
                         <option value="hsl(195, 100%, 57%)">Cyan 3</option>
@@ -97,37 +104,44 @@ About you now</div>
                         <option value="hsl(57, 100%, 44%)">Yellow</option>
                         <option value="hsl(0, 0%, 0%)">Black</option>
                     </select>
-                </div>
-                <div class="flex items-center gap-2">
-                    <label class="text-gray-700 font-medium" data-i18n="text">Text</label>
-                    <select id="text-color" class="px-2 py-1 rounded border border-gray-300">
+                </label>
+                <label class="setting">
+                    <span data-i18n="text">Text</span>
+                    <select id="text-color">
                         <option value="hsl(195, 5%, 10%)">10%</option>
                         <option value="hsl(195, 5%, 20%)" selected>20%</option>
                         <option value="hsl(195, 5%, 40%)">40%</option>
                         <option value="hsl(0, 0%, 0%)">100%</option>
                     </select>
-                </div>
+                </label>
             </div>
         </section>
 
-        <!-- Help Section -->
-        <section class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <div class="text-gray-700 space-y-2">
-                <p><strong data-i18n="help.title">Title - Show/hide the editable document title</strong></p>
-                <p><strong data-i18n="help.adsu">Adsu - Adds the maybe missing space(s) after add and sus chords</strong></p>
-                <p><strong data-i18n="help.btoh">B→H - If you're from Denmark</strong></p>
-                <p><strong data-i18n="help.size">+/- - Font size</strong></p>
-                <p><strong data-i18n="help.done">Done - Hide everything but the document</strong></p>
-                <p class="mt-4">
-                    <span data-i18n="reportIssues">Report issues and give me ideas on</span> 
-                    <a href="https://github.com/wachin/monomusic" class="text-blue-600 hover:underline">GitHub</a>
-                </p>
+        <!-- Help -->
+        <section class="card help-card">
+            <h3 data-i18n="helpTitle">What the buttons do</h3>
+            <div class="help-grid">
+                <p data-i18n="help.title">Title - Show/hide the editable document title</p>
+                <p data-i18n="help.adsu">Adsu - Adds the maybe missing space(s) after add and sus chords</p>
+                <p data-i18n="help.btoh">B→H - If you're from Denmark</p>
+                <p data-i18n="help.size">+/- - Font size</p>
+                <p data-i18n="help.done">Done - Hide everything but the document</p>
+                <p data-i18n="help.copy">Copy - Copy the result to the clipboard</p>
             </div>
         </section>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <p>
+                <span data-i18n="reportIssues">Report issues and give me ideas on</span>
+                <a href="https://github.com/wachin/monomusic">GitHub</a>
+            </p>
+            <p>MonoMusic · OFL 1.1</p>
+        </footer>
     </div>
 
   <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
   <script nomodule crossorigin id="vite-legacy-polyfill" src="/monomusic/assets/polyfills-legacy.GLPMgC1C.js"></script>
-  <script nomodule crossorigin id="vite-legacy-entry" data-src="/monomusic/assets/index-legacy.Brzb8lU_.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/monomusic/assets/index-legacy.C2yS83eK.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
 </body>
 </html>

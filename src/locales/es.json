@@ -6,6 +6,13 @@
   "chordFixer": "Convertidor de Acordes",
   "placeholder": "Escribe o pega aquí, pulsa 'Corregir' y obtén acordes como en el ejemplo",
   "fix": "Corregir",
+  "clear": "Limpiar",
+  "copy": "Copiar",
+  "copied": "¡Copiado!",
+  "step1": "Pega tus acordes y letra",
+  "step2": "Resultado",
+  "helpTitle": "Qué hacen los botones",
+  "font": "Fuente",
   "titleBtn": "Título",
   "adsu": "Añadir Espacios",
   "bToH": "B→H",
@@ -17,7 +24,8 @@
     "adsu": "Añadir Espacios - Añade espacios faltantes después de acordes add y sus",
     "btoh": "B→H - Si eres de Dinamarca (convierte B a H)",
     "size": "+/- - Tamaño de fuente",
-    "done": "Listo - Ocultar todo excepto el documento"
+    "done": "Listo - Ocultar todo excepto el documento",
+    "copy": "Copiar - Copia el resultado al portapapeles"
   },
   "reportIssues": "Reporta problemas y dame ideas en",
   "language": "Idioma",

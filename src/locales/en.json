@@ -6,6 +6,13 @@
   "chordFixer": "MonoMusicFixer",
   "placeholder": "Type/paste here, click 'Fix' and get chords like shown in the example",
   "fix": "Fix",
+  "clear": "Clear",
+  "copy": "Copy",
+  "copied": "Copied!",
+  "step1": "Paste your chords & lyrics",
+  "step2": "Result",
+  "helpTitle": "What the buttons do",
+  "font": "Font",
   "titleBtn": "Title",
   "adsu": "Adsu",
   "bToH": "B→H",
@@ -17,7 +24,8 @@
     "adsu": "Adsu - Adds the maybe missing space(s) after add and sus chords",
     "btoh": "B→H - If you're from Denmark",
     "size": "+/- - Font size",
-    "done": "Done - Hide everything but the document"
+    "done": "Done - Hide everything but the document",
+    "copy": "Copy - Copy the result to the clipboard"
   },
   "reportIssues": "Report issues and give me ideas on",
   "language": "Language",

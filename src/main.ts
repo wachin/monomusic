@@ -33,8 +33,12 @@ function updateTranslations() {
   });
   document.querySelectorAll('[data-i18n-value]').forEach((el) => {
     const key = el.getAttribute('data-i18n-value');
-    if (key && 'value' in el) {
-      (el as HTMLInputElement).value = i18next.t(key);
+    if (!key) return;
+    const text = i18next.t(key);
+    if (el instanceof HTMLButtonElement) {
+      el.textContent = text; // buttons show their text, not their value
+    } else if (el instanceof HTMLInputElement) {
+      el.value = text;
     }
   });
 }
@@ -70,10 +74,58 @@ function init() {
     });
   }
 
-  // Language switcher
+  // Clear: empty the input and put the cursor back
+  const clearBtn = document.getElementById('clear-btn');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      const input = document.getElementById('text-input') as HTMLTextAreaElement | null;
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+    });
+  }
+
+  // Copy: put the rendered result on the clipboard with feedback
+  const copyBtn = document.getElementById('copy-btn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const output = document.getElementById('output');
+      if (!output) return;
+      const text = output.innerText;
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      } catch {
+        // fallback for older browsers / non-secure contexts
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          ok = document.execCommand('copy');
+        } catch {
+          ok = false;
+        }
+        ta.remove();
+      }
+      if (ok) {
+        copyBtn.textContent = i18next.t('copied');
+        setTimeout(() => {
+          copyBtn.textContent = i18next.t('copy');
+        }, 1500);
+      }
+    });
+  }
+
+  // Language switcher (resolvedLanguage strips region codes like es-ES -> es)
   const langSelect = document.getElementById('lang-select') as HTMLSelectElement | null;
   if (langSelect) {
-    langSelect.value = i18next.language || 'en';
+    const current = (i18next.resolvedLanguage || i18next.language || 'en').split('-')[0];
+    langSelect.value = current;
     langSelect.addEventListener('change', (e) => {
       changeLanguage((e.target as HTMLSelectElement).value);
     });

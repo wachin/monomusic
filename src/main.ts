@@ -181,6 +181,11 @@ function init() {
     fontSelect.addEventListener('change', (e) => {
       const font = (e.target as HTMLSelectElement).value;
       document.documentElement.style.setProperty('--main-font', font === 'monomusicmono' ? 'monomusicmono' : 'monomusicregular');
+      if (font === 'monomusicmono') {
+        document.body.classList.add('font-mono');
+      } else {
+        document.body.classList.remove('font-mono');
+      }
     });
   }
   

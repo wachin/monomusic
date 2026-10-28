@@ -12,9 +12,9 @@
 
 @font-face {
   font-family: 'monomusicmono';
-  src: url('./MonoMusic-Mono.woff2') format('woff2'),
-       url('./MonoMusic-Mono.woff') format('woff'),
-       url('./MonoMusic-Mono.ttf') format('truetype');
+  src: url('./MonoMusic-Mono-NL.woff2') format('woff2'),
+       url('./MonoMusic-Mono-NL.woff') format('woff'),
+       url('./MonoMusic-Mono-NL.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -33,6 +33,15 @@
   -webkit-font-feature-settings: "liga", "clig";
   -moz-font-feature-settings: "liga", "clig";
   -ms-font-feature-settings: "liga", "clig";
+}
+
+.font-mono,
+body.font-mono * {
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
+  -webkit-font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
+  -moz-font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
+  -ms-font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
 }
 
 body {
@@ -68,6 +77,11 @@ body {
   overflow-x: auto;
 }
 
+body.font-mono #output {
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
+}
+
 textarea {
   font-family: var(--main-font), monospace !important;
   font-variant-ligatures: common-ligatures;
@@ -76,6 +90,11 @@ textarea {
   line-height: 1.5;
   background: white;
   border: 2px solid #cbd5e1;
+}
+
+body.font-mono textarea {
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
 }
 
 .focus-mode .container > *:not(#output-container):not(#close-focus) {

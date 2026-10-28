@@ -50,7 +50,7 @@ const SUFFIX_SOURCE = [
   'b9sus', 'alt7', 'alt', 'phryg', 'dom',
   'sus2', 'sus4', 'sus',
   'dim7', 'dim', 'aug',
-  'add13', 'add11', 'add9', 'add6', 'add2',
+  'add13', 'add11', 'add9', 'add6', 'add4', 'add2',
   '69', '6\\/9', '6', '5', '9', '11', '13',
   'o7', 'o', 'ø',
   '\\+',

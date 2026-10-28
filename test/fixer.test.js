@@ -5,6 +5,8 @@
 // superscript glyphs.
 const { test, before } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { JSDOM } = require('jsdom');
 
 // PUA superscripts, verified against the cmap of MonoMusic-Regular.ttf
@@ -98,6 +100,26 @@ test('tablature keeps its bar and digits: | becomes l! (font ligature for bar)',
   assert.equal(trimmed('E|---5-7---'), 'El!---5-7---');
   assert.equal(fix('E|---5-7---').includes(SUP['5']), false, 'tab digits are not superscripted');
   assert.equal(fix('E|---5-7---').includes(SUP['7']), false);
+});
+
+test('default sample covers chord ligatures and includes a six-string tab', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const page = new JSDOM(html);
+  const sample = page.window.document.getElementById('output').textContent;
+  for (const chord of [
+    'Gsus2', 'Gsus4', 'Gadd2', 'Gadd4', 'Gadd6', 'Gadd9', 'Gadd11', 'Gadd13',
+    'C11', 'C13', 'Cm7b5', 'F#m7', 'Bb7', 'E7#9', 'Cmaj7', 'C+', 'C-'
+  ]) {
+    assert.ok(sample.includes(chord), `sample includes ${chord}`);
+  }
+  const tabRows = sample.split('\n').filter((line) => /^[eEADGB]\|/.test(line));
+  assert.equal(tabRows.length, 6, 'sample contains all six guitar strings');
+  const converted = fix(sample);
+  assert.ok(converted.includes('G' + SUP.s + SUP.u + SUP.s + SUP['4']), 'sus4 is converted');
+  assert.ok(converted.includes('G' + SUP.a + SUP.d + SUP.d + SUP['4']), 'add4 is converted');
+  assert.ok(converted.includes('C' + SUP['1'] + SUP['1']), '11 remains two superscript digits for the font ligature');
+  assert.ok(converted.includes('C' + SUP['1'] + SUP['3']), '13 remains superscript digits for the font ligature');
+  page.window.close();
 });
 
 test('bare note letters get highlighted so they enter the shrink step', () => {

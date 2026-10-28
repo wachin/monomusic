@@ -49,12 +49,22 @@ function changeLanguage(lang: string) {
   });
 }
 
+function renderConverted(text: string) {
+  const output = document.getElementById('output') as HTMLDivElement | null;
+  if (!output) return;
+  output.dataset.source = text;
+  let html = convert(text);
+  // The no-ligature Mono font maps U+007C directly to the tab bar glyph.
+  // The Regular font needs the historical l! ligature sequence instead.
+  if (document.body.classList.contains('font-mono')) {
+    html = html.replace(/l!/g, '|');
+  }
+  output.innerHTML = html;
+}
+
 function convertInput() {
   const input = document.getElementById('text-input') as HTMLTextAreaElement | null;
-  const output = document.getElementById('output') as HTMLDivElement | null;
-  if (input && output) {
-    output.innerHTML = convert(input.value);
-  }
+  if (input) renderConverted(input.value);
 }
 
 function init() {
@@ -63,7 +73,7 @@ function init() {
   // Convert the built-in example on first load, like the original page did.
   const output = document.getElementById('output');
   if (output && !output.querySelector('.highlight')) {
-    output.innerHTML = convert(output.textContent || '');
+    renderConverted(output.textContent || '');
   }
 
   const form = document.getElementById('converter-form');
@@ -141,6 +151,8 @@ function init() {
         font === 'monomusicmono' ? 'monomusicmono' : 'monomusicregular'
       );
       document.body.classList.toggle('font-mono', font === 'monomusicmono');
+      const output = document.getElementById('output');
+      if (output?.dataset.source) renderConverted(output.dataset.source);
     });
   }
 

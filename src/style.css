@@ -125,6 +125,19 @@ body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+/* small "what's the difference?" link next to the Font selector */
+.font-hint {
+  font-size: 0.78rem;
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(37, 99, 235, 0.45);
+}
+
+.font-hint:hover {
+  text-decoration: none;
+  border-bottom-style: solid;
+}
+
 /* --------------------------------------------------------------- buttons */
 .btn {
   display: inline-flex;

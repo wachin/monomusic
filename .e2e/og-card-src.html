@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'MonoMusicRegular';
+    src: url('../MonoMusic-Regular.ttf') format('truetype');
+    font-feature-settings: "liga", "clig";
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: 'DejaVu Sans', 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg, #f8fafc 0%, #e6edf6 60%, #dcebf5 100%);
+    color: #0f172a;
+    padding: 56px 70px 46px;
+    position: relative;
+  }
+  /* faint fixed-grid backdrop, echoing the font's 0.5em cells */
+  body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(to right, rgba(8,145,178,0.10) 0 1px, transparent 1px 18px);
+    pointer-events: none;
+  }
+  .frame { position: relative; height: 100%; display: flex; flex-direction: column; }
+
+  h1 { font-size: 82px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+  h1 .accent { color: #0891b2; }
+  .tag { display: flex; align-items: baseline; gap: 20px; }
+  .tagline { font-size: 26px; color: #5b6472; font-weight: 500; white-space: nowrap; }
+
+  .sheet {
+    margin-top: 40px;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 26px 34px;
+    box-shadow: 0 14px 40px -18px rgba(15,23,42,0.35);
+    font-family: 'MonoMusicRegular';
+    font-feature-settings: "liga", "clig";
+    font-size: 32px;
+    line-height: 52px;
+    white-space: pre;
+    width: 1060px;
+  }
+  .sheet .chord { color: #0891b2; }
+  .sheet .muted { color: #9099a6; }
+
+  .features {
+    margin-top: 30px;
+    display: flex; gap: 14px; justify-content: flex-start;
+    font-size: 20px; color: #334155; font-weight: 500;
+  }
+  .features span {
+    background: rgba(255,255,255,0.75);
+    border: 1px solid #cfdce8;
+    padding: 9px 18px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .features b { color: #0891b2; }
+
+  .foot {
+    margin-top: auto;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .pill {
+    background: #0891b2;
+    color: #fff;
+    font-size: 22px; font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 999px;
+  }
+  .url {
+    font-size: 22px; color: #334155; font-weight: 600;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #cbd5e1;
+    padding: 12px 22px;
+    border-radius: 999px;
+  }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="tag">
+      <h1>Mono<span class="accent">Music</span></h1>
+      <div class="tagline">a monospaced font for chords &amp; tabs</div>
+    </div>    <div class="sheet"><span class="chord">G&#xE018;&#xE007;           G&#xE021;&#xE022;&#xE021;&#xE004;     C&#xE01B;&#xE01C;&#xE01C;&#xE009;</span>
+Amazing grace!  how sweet the sound,</div>
+
+    <div class="features">
+      <span><b>&#10003;</b> chords above the syllables</span>
+      <span><b>&#10003;</b> tabs keep their column</span>
+      <span><b>&#10003;</b> no-ligature Mono edition</span>
+    </div>
+
+    <div class="foot">
+      <div class="pill">&#9834; MonoMusicFixer &#8212; fix your chords live</div>
+      <div class="url">wachin.github.io/monomusic</div>
+    </div>
+  </div>
+</body>
+</html>

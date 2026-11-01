@@ -34,6 +34,9 @@ everything stays aligned.
 | [`MonoMusic-Regular.woff2`](MonoMusic-Regular.woff2) | the web (smallest) |
 | [`MonoMusic-Regular.woff`](MonoMusic-Regular.woff) | older browsers |
 | [`MonoMusic-Regular.ttf`](MonoMusic-Regular.ttf) | desktop apps, word processors, FontForge |
+| [`MonoMusic-Mono-NL.woff2`](MonoMusic-Mono-NL.woff2) | the web (smallest) — [Mono edition](#monomusic-mono--the-strict-fixed-grid-edition) |
+| [`MonoMusic-Mono-NL.woff`](MonoMusic-Mono-NL.woff) | older browsers — Mono edition |
+| [`MonoMusic-Mono-NL.ttf`](MonoMusic-Mono-NL.ttf) | desktop apps that rely on strict monospace — Mono edition |
 | [`resources/MonoManual.pdf`](resources/MonoManual.pdf) | the original 2015 manual |
 | [`NOTATION.md`](NOTATION.md) | one-page chord & tab cheat sheet |
 
@@ -297,14 +300,15 @@ npm install   # once (installs jsdom)
 npm test      # node --test + font contract
 ```
 
-- **13 fixer tests** (`test/fixer.test.js`) load the real `index.html` in jsdom, press
+- **15 fixer tests** (`test/fixer.test.js`) load the real `index.html` in jsdom, press
   *Fix* and assert the exact private-use code points of the output.
 - **Font contract test** (`test/font_contract.py`, needs `fontTools`) asserts that the
   FontForge source (`.sfdir`), the three shipped binaries and the fixer agree: same
   `cmap`, same glyph names, same ligature set, every `U+E0xx` the fixer emits maps to
   the right superscript glyph, and every character of the manual is covered.
 
-Both must pass after any change to the font or to `js/chordhighlight.js`.
+Both must pass after any change to the font or to `src/fixer.mjs` (the ported
+`js/chordhighlight.js` pipeline).
 
 ## Building the font
 
@@ -321,6 +325,71 @@ f=TTFont('MonoMusic-Regular.ttf'); f.flavor='woff2'; f.save('MonoMusic-Regular.w
 ```
 
 Then run `npm test` — the contract test is what keeps source, binaries and fixer in step.
+
+## MonoMusic Mono — the strict fixed-grid edition
+
+**MonoMusic Mono** (files ending in `-NL`, for **no ligatures**) is a second edition of
+the font, built from the same FontForge source: the same M+ outlines, the same glyph set
+and the same superscript code points — but with **every OpenType ligature rule removed**.
+That single deletion changes the whole personality of the font.
+
+### Who it is for
+
+Many musicians do not write chords in a score editor — they keep a plain `.txt` file in
+Notepad, gedit or TextEdit, or a document in LibreOffice or Google Docs, with the chords
+written **above the lyrics**, line by line. That workflow only works if the classic
+monospace promise holds: **every typed character is exactly one cell**. MonoMusic breaks
+that promise in a subtle way: with ligatures on (the default in browsers and office
+suites), typing `Dsus4` fuses `sus4` into one glyph that is 3 cells wide for 4 letters —
+the line now has one cell less than your text says, and columns shift the moment the
+file opens in another app or is shared with a friend.
+
+MonoMusic Mono can never do that. N typed characters = exactly N cells, in every app,
+and it stays true even after the fixer converts your chords, because every superscript
+glyph is one cell too.
+
+![MonoMusic Mono specimen: the ligature squeeze of Regular vs the fixed grid of Mono, chords above lyrics and tablature](resources/monomusic-mono-specimen.png)
+
+### The two editions side by side
+
+| | **MonoMusic** (Regular) | **MonoMusic Mono** (`-NL`) |
+|---|---|---|
+| OpenType ligatures | 64 rules (`A!`→`Δ`, `s u s 4`→`sus⁴`, `l!`→bar…) | **none — nothing can fuse** |
+| Typing `Dsus4` in Word/LibreOffice | `sus⁴` prints pretty, but 5 letters become 4 cells | `Dsus4` stays 5 plain letters = 5 cells |
+| Ligature codes `A!` `b!` `#!` `o!` `l!` | print as music symbols while you type | print literally as typed (`A!` stays `A!`) |
+| Output of the MonoMusicFixer | identical code points — every superscript glyph is one cell in both editions | identical |
+| Tab bar `\|` | emitted as the `l!` ligature, which the font draws as the bar glyph | drawn straight from the plain `\|` glyph — same result |
+| Best for | printed charts, PDFs, showcase pages | `.txt` / lyrics files, shared documents, anything column-critical |
+
+The trade-off in one line: **Regular is the print edition, Mono is the working file
+edition.** Because a `.txt` file contains only plain characters, your lyrics stay
+portable and perfectly aligned for anyone using any monospaced font — and when it is
+time to print, one click of **Fix** brings back the raised superscript notation.
+
+Both editions install side by side: the Regular files use the family name `MonoMusic`,
+the `-NL` files use `MonoMusic Mono`.
+
+> **Note:** the repo also contains `MonoMusic-Mono.*` files *without* the `-NL` suffix.
+> Those still carry the ligature rules and behave like Regular — the `-NL` files are the
+> truly fixed-grid ones.
+
+### Use it in your own files
+
+```css
+@font-face {
+  font-family: 'MonoMusic Mono';
+  src: url('MonoMusic-Mono-NL.woff2') format('woff2'),
+       url('MonoMusic-Mono-NL.woff') format('woff'),
+       url('MonoMusic-Mono-NL.ttf') format('truetype');
+  font-display: swap;
+}
+pre, code, textarea, .lyrics-sheet { font-family: 'MonoMusic Mono', monospace; }
+```
+
+In LibreOffice / Word / Google Docs, set the document font to **MonoMusic Mono** and
+your existing chord-over-lyrics files align correctly without any other change. On the
+[fixer page](https://wachin.github.io/monomusic/), pick **MonoMusic Mono** in the
+*Font* selector to preview your text exactly as it will look in the mono edition.
 
 ## Credits & license
 

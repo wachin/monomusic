@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'MonoMusicRegular';
+    src: url('../MonoMusic-Regular.ttf') format('truetype');
+    font-feature-settings: "liga", "clig";
+  }
+  @font-face {
+    font-family: 'MonoMusicMono';
+    src: url('../MonoMusic-Mono-NL.ttf') format('truetype');
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'DejaVu Sans', sans-serif;
+    width: 920px;
+    padding: 34px 40px 26px;
+    background: #ffffff;
+    color: #1f2430;
+  }
+  h1 { font-size: 25px; font-weight: 700; letter-spacing: -0.2px; }
+  h1 .accent { color: #0891b2; }
+  .sub { font-size: 13.5px; color: #5b6472; margin: 5px 0 24px; }
+  .panel { margin-bottom: 22px; }
+  .label {
+    font-size: 12.5px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; margin-bottom: 3px;
+  }
+  .label.blue { color: #0891b2; }
+  .label.dark { color: #3c4451; }
+  .note { font-size: 12.5px; color: #5b6472; margin-bottom: 10px; }
+  .row {
+    font-size: 30px;
+    line-height: 40px;
+    padding: 6px 0 6px 8px;
+    white-space: pre;
+    border-radius: 8px;
+  }
+  .grid {
+    background-image: repeating-linear-gradient(to right,
+      rgba(8,145,178,0.22) 0px, rgba(8,145,178,0.22) 1px, transparent 1px, transparent 15px);
+  }
+  .regular { font-family: 'MonoMusicRegular'; }
+  .mono    { font-family: 'MonoMusicMono'; }
+  .typed   { font-family: ui-monospace, 'DejaVu Sans Mono', monospace; color: #3c4451; }
+  .chord   { color: #0891b2; }
+  .lyrics  { font-size: 30px; line-height: 40px; color: #3c4451; }
+  .legend {
+    display: flex; gap: 26px; font-size: 12.5px; color: #5b6472;
+    border-top: 1px solid #e4e8ee; padding-top: 12px; margin-top: 6px;
+  }
+  .legend b { color: #1f2430; }
+  .cellmark { color: #0891b2; font-weight: 700; }
+</style>
+</head>
+<body>
+  <h1>MonoMusic <span class="accent">Mono</span> — the fixed-grid edition</h1>
+  <div class="sub">Same outlines, same music. Mono ships <b>without ligature rules</b>: every character you type occupies exactly one grid cell.</div>
+
+  <div class="panel">
+    <div class="label dark">1 · Typed in any standard monospaced font</div>
+    <div class="note">One character = one cell. This is the baseline your lyrics sheet lives in.</div>
+    <div class="row grid typed">Dsus4   Csus4   Fadd9</div>
+  </div>
+
+  <div class="panel">
+    <div class="label dark">2 · MonoMusic (original, ligatures on)</div>
+    <div class="note">Beautiful print, but OpenType ligatures fuse a chord into fewer cells — columns shift and copied text no longer matches the grid.</div>
+    <div class="row grid regular">Dsus4   Csus4   Fadd9</div>
+  </div>
+
+  <div class="panel">
+    <div class="label blue">3 · MonoMusic Mono (no ligatures) — grid intact</div>
+    <div class="note">Same shape letter by letter; nothing fuses, so chords above the syllables stay put while you edit, save and re-open the file.</div>
+    <div class="row grid mono">Dsus4   Csus4   Fadd9</div>
+  </div>
+
+  <div class="panel">
+    <div class="label blue">4 · Chords above lyrics — typed, then fixed</div>
+    <div class="mono">
+      <div class="lyrics"><span class="chord">        Dsus4   Csus4 Fadd9</span></div>
+      <div class="lyrics">Amazing  grace,  how   sweet the sound</div>
+      <div class="lyrics"><span class="chord">        D&#xE021;&#xE022;&#xE021;&#xE004;   C&#xE021;&#xE022;&#xE021;&#xE004; F&#xE01B;&#xE01C;&#xE01C;&#xE009;</span></div>
+      <div class="lyrics" style="color:#8b93a1; font-size:12.5px;">↑ after one click on Fix: the same five cells per chord, now with raised superscripts</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label blue">5 · Tablature keeps its column</div>
+    <div class="mono lyrics">E|---0-----1---3---|</div>
+    <div class="mono lyrics">B|-1---3---------3-|</div>
+  </div>
+
+  <div class="legend">
+    <div><b class="cellmark">│</b> cyan lines = one grid cell (0.5 em)</div>
+    <div><b>Regular:</b> ligature glyphs are 3 cells wide for 4 typed characters</div>
+    <div><b>Mono:</b> N typed characters = exactly N cells — also after Fix</div>
+  </div>
+</body>
+</html>
